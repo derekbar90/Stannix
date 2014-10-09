@@ -22,10 +22,10 @@ public class Stannix {
 		sendText();
 		
 	}
-	
+	TextService newText;
 	private void sendText(){
 		
-		TextService newText = new TextService(phoneNumber, messageContents);
+		newText = new TextService(phoneNumber, messageContents);
 		
 		try {
 			
@@ -37,6 +37,11 @@ public class Stannix {
 			
 		}
 		
+	}
+	
+	public String getInfo()
+	{
+		return newText.getMessageList();
 	}
 
 }

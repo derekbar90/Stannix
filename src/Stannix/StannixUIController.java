@@ -31,7 +31,7 @@ public class StannixUIController {
 	
 	@FXML private void getMess(ActionEvent event){
 		
-		outputWindow.setText(" ");
+		outputWindow.setText(startGame.getInfo());
 		
 	}
 		

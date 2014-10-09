@@ -58,7 +58,7 @@ public class TextService {
 			 
 			 // Build the parameters 
 			 final Map<String, String> params = new HashMap<String, String>();
-			 params.put("DateSent", "2014-10-08");
+			 params.put("DateSent=>", "2014-10-08");
 		 
 			 MessageList messages = client.getAccount().getMessages(params); 
 			 
@@ -70,6 +70,5 @@ public class TextService {
 			
 			return messageList;
 		}
-		
 		
 }
