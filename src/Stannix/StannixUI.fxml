@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
@@ -13,6 +14,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#startGame" text="Start Game" />
                   <MenuItem mnemonicParsing="false" onAction="#getMess" text="Get Messages" />
               <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
             </items>
