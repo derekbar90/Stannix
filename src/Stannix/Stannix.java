@@ -3,6 +3,10 @@
  */
 package Stannix;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
 import com.twilio.sdk.TwilioRestException;
 
 /**
@@ -12,7 +16,8 @@ import com.twilio.sdk.TwilioRestException;
 
 public class Stannix {
 
-	String phoneNumber, messageContents;
+	String phoneNumber, messageContents, currentDateStamp;
+	TextService newText, messageList;
 	
 	public Stannix(String phoneNumber, String messageContents) {
 		
@@ -22,7 +27,9 @@ public class Stannix {
 		sendText();
 		
 	}
-	TextService newText;
+	
+	public Stannix(){}
+	
 	private void sendText(){
 		
 		newText = new TextService(phoneNumber, messageContents);
@@ -39,9 +46,29 @@ public class Stannix {
 		
 	}
 	
-	public String getInfo()
-	{
-		return newText.getMessageList();
+	public String getInfo(){
+		
+		messageList = new TextService();
+		return messageList.getMessageList(setTimeStamp());
+	
+	}
+	
+	public String displaySessionId(){
+		
+		Random rand = new Random();
+		return String.valueOf(rand.nextInt((9999 - 1001) + 1) + 1001);
+		
+		
+	}
+	
+	public String setTimeStamp(){
+		
+		SimpleDateFormat date = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+		Date today = new Date();
+		currentDateStamp = date.format(today);
+		
+		return currentDateStamp;
+		
 	}
 
 }
