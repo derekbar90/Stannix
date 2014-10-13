@@ -30,8 +30,10 @@ public class TextService {
 			this.phoneNumber = phoneNumber;
 			this.messageContents = messageContents;
 			
-			
 		}
+		
+		//Empty Contrustor
+		public TextService(){}
 		
 		public void sendText() throws TwilioRestException{
 			
@@ -50,7 +52,7 @@ public class TextService {
 			
 		}
 		
-		public String getMessageList(){
+		public String getMessageList(String time){
 			
 			 String messageList = "";  
 			 
@@ -58,13 +60,17 @@ public class TextService {
 			 
 			 // Build the parameters 
 			 final Map<String, String> params = new HashMap<String, String>();
-			 params.put("DateSent=>", "2014-10-08");
+			 //params.put("DateSent", "2014-10-12");
 		 
 			 MessageList messages = client.getAccount().getMessages(params); 
 			 
 			 for (Message message : messages) { 
 				 			 
-					 messageList += message.getBody() + "\t" + message.getDateSent() + "\n";
+				 	if(message.getDirection().equals("inbound") && message.getDateCreated().equals(time)){
+					 
+				 		messageList += message.getBody() + "\t" + message.getDateSent() + "\t" + message.getDateCreated() + "\n";
+					 
+				 	}
 					  
 			 } 
 			
