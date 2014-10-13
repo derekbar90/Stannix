@@ -17,9 +17,17 @@ public class StannixUIController {
 	private String messageContentsText;
 	private String phoneNumberText;
 	
-	Stannix startGame;
+	Stannix startGame, messageList;
 	
-	@FXML private void readUI(ActionEvent event){
+	@FXML private void startGame(ActionEvent event){
+			
+		startGame = new Stannix();
+		startGame.setTimeStamp();
+		outputWindow.setText(startGame.displaySessionId());
+		
+	}
+	
+@FXML private void readUI(ActionEvent event){
 		
 		setPhoneNumberText(phoneNumber.getText());
 		setMessageContentsText(messageContents.getText()); 
@@ -31,7 +39,8 @@ public class StannixUIController {
 	
 	@FXML private void getMess(ActionEvent event){
 		
-		outputWindow.setText(startGame.getInfo());
+		messageList= new Stannix();
+		outputWindow.setText(messageList.getInfo());
 		
 	}
 		
