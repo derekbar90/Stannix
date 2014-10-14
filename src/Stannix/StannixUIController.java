@@ -1,10 +1,14 @@
 package Stannix;
 
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import com.twilio.sdk.resource.instance.Message;
 
 public class StannixUIController {
 	
@@ -20,14 +24,26 @@ public class StannixUIController {
 	Stannix startGame, messageList;
 	
 	@FXML private void startGame(ActionEvent event){
-			
+		
+		boolean bool = true;
 		startGame = new Stannix();
 		startGame.setTimeStamp();
-		outputWindow.setText(startGame.displaySessionId());
+		
+		
+		outputWindow.setText(startGame.gameInitialization());
+		
+		while(bool){
+			
+			String startTime = startGame.gameInitialization();
+			ArrayList<Message> players = startGame.getMessages();
+			outputWindow.setText(startGame.printMessages(players));
+			bool = false;
+			
+		}
 		
 	}
 	
-@FXML private void readUI(ActionEvent event){
+@FXML private void start(ActionEvent event){
 		
 		setPhoneNumberText(phoneNumber.getText());
 		setMessageContentsText(messageContents.getText()); 
@@ -40,7 +56,8 @@ public class StannixUIController {
 	@FXML private void getMess(ActionEvent event){
 		
 		messageList= new Stannix();
-		outputWindow.setText(messageList.getInfo());
+		ArrayList<Message> players = startGame.getMessages();
+		outputWindow.setText(startGame.printMessages(players));
 		
 	}
 		
