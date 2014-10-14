@@ -54,6 +54,7 @@ public class TextService {
 			Message message = messageFactory.create(params); 
 			System.out.println(message.getSid()); 
 			
+			
 		}
 		
 		private String getDate(){
