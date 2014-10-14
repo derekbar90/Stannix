@@ -1,12 +1,15 @@
 package Stannix;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.twilio.sdk.resource.instance.Message;
 
@@ -23,23 +26,30 @@ public class StannixUIController {
 	
 	Stannix startGame, messageList;
 	
+	@SuppressWarnings("deprecation")
 	@FXML private void startGame(ActionEvent event){
 		
 		boolean bool = true;
 		startGame = new Stannix();
 		startGame.setTimeStamp();
+		String gameID = startGame.gameInitialization();
 		
-		
-		outputWindow.setText(startGame.gameInitialization());
-		
-		while(bool){
+		Optional<String> response = Dialogs.create().title("Stannix").masthead("How many players are there?").showTextInput();
+			 
+		response.ifPresent(name -> System.out.println(name));
 			
-			String startTime = startGame.gameInitialization();
-			ArrayList<Message> players = startGame.getMessages();
-			outputWindow.setText(startGame.printMessages(players));
-			bool = false;
-			
-		}
+		Dialogs.create().lightweight().title("Waiting for players...").masthead("To join the curent game:").message( "Text: " + gameID + " to (703) 991-4800").showInformation();
+		
+//		while(bool){
+//			
+//			String startTime = startGame.gameInitialization();
+//			ArrayList<Message> players = startGame.getMessages();
+//			outputWindow.setText(startGame.printMessages(players));
+//			bool = false;
+//			
+//		}
+		
+		
 		
 	}
 	
