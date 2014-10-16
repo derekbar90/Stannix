@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -24,8 +22,9 @@ public class TextService {
 	//Class Variables
 	
 		//Twilio API Strings
-		final String ACCOUNT_SID = "ACae1f2a7a2d9403d1247a099a041bd68c";  //$NON-NLS-1$
-		final String AUTH_TOKEN = Messages.getString("TextService.1");  //$NON-NLS-1$
+		final String ACCOUNT_SID = "ACae1f2a7a2d9403d1247a099a041bd68c"; 
+		final String AUTH_TOKEN = Messages.getString("TextService.1");
+		ArrayList<Message> messageList;
 		
 		String phoneNumber, messageContents;
 
@@ -36,7 +35,7 @@ public class TextService {
 			
 		}
 		
-		//Empty Contrustor
+		//Empty Constructor
 		public TextService(){}
 		
 		public void sendText() throws TwilioRestException{
@@ -46,9 +45,9 @@ public class TextService {
 					 
 			// Build the parameters 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();  
-			params.add(new BasicNameValuePair("To", phoneNumber));  //$NON-NLS-1$
-			params.add(new BasicNameValuePair("From", "+17039914800"));  //$NON-NLS-1$ //$NON-NLS-2$
-			params.add(new BasicNameValuePair("Body", messageContents));    //$NON-NLS-1$
+			params.add(new BasicNameValuePair("To", phoneNumber)); 
+			params.add(new BasicNameValuePair("From", "+17039914800"));  
+			params.add(new BasicNameValuePair("Body", messageContents)); 
 			 
 			MessageFactory messageFactory = client.getAccount().getMessageFactory(); 
 			Message message = messageFactory.create(params); 
@@ -59,48 +58,36 @@ public class TextService {
 		
 		private String getDate(){
 			
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd"); 
 			Date today = new Date();
 			return date.format(today);
 			
 		}
 		
-		private String regex(String string){
+		public ArrayList<Message> getMessageList(Date start, Date end){
 			
-			String result = "";  //$NON-NLS-1$
-			String patternString = "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]"; //$NON-NLS-1$
-			
-			Pattern pattern = Pattern.compile(patternString);
-			Matcher matches = pattern.matcher(string);
-			
-			if(matches.find()){
-				
-				result = matches.group(0);
-				
-			}
-			return result;
-		}
-		
-		public ArrayList<Message> getMessageList(String time){
-			
-			 ArrayList<Message> messageList = new ArrayList<Message>();
+			 messageList = new ArrayList<Message>();
 			 
 			 TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN); 
 			 
 			 // Build the parameters 
 			 final Map<String, String> params = new HashMap<String, String>();
-			 params.put("DateSent", getDate()); //$NON-NLS-1$
+			 params.put("DateSent", getDate()); 
 		 
 			 MessageList messages = client.getAccount().getMessages(params); 
-			 
+			
 			 for (Message message : messages) { 
 				 			 
-				 	if(message.getDirection().equals("inbound")){ //$NON-NLS-1$
-					 
-				 		messageList.add(message);
+				 	if(message.getDirection().equals("inbound")){ 
+				 		
+				 		if(start.compareTo(message.getDateSent()) < 0 && end.compareTo(message.getDateSent()) > 0){
+				 			
+				 			messageList.add(message);
+				 			
+				 		}
 					 
 				 	}
-					  
+				 	
 			 } 
 			
 			return messageList;
