@@ -3,12 +3,10 @@
  */
 package Stannix;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
-import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.instance.Message;
 
 /**
@@ -18,39 +16,24 @@ import com.twilio.sdk.resource.instance.Message;
 
 public class Stannix {
 
-	String phoneNumber, messageContents, currentDateStamp;
-	TextService newText, messageList;
-	String messageListSring = "";
-	
-	public Stannix(String phoneNumber, String messageContents) {
-		
-		this.phoneNumber = phoneNumber;
-		this.messageContents = messageContents;
-		
-	}
+	private Date startTimeStamp, endTimeStamp;
+	private String messageListSring = "";
+	private TextService messageList = new TextService();
+	public ArrayList<Player> playerList = new ArrayList<Player>();
+	int playerCount = 0;
 	
 	public Stannix(){}
 	
-	private void sendText(){
+	public int playerCount(int count){
 		
-		newText = new TextService(phoneNumber, messageContents);
+		this.playerCount = count;
 		
-		try {
-			
-			newText.sendText();
-		
-		} catch (TwilioRestException e) {
-			
-			System.out.println("Failed to Send Text");
-			
-		}
-		
+		return playerCount;
 	}
 	
 	public ArrayList<Message> getMessages(){
-		
-		messageList = new TextService();
-		return messageList.getMessageList(setTimeStamp());
+				
+		return messageList.getMessageList(startTimeStamp, endTimeStamp);
 	
 	}
 	
@@ -71,21 +54,56 @@ public class Stannix {
 		
 	}
 	
+	public int createPlayers(String gameID) throws InterruptedException{
+		
+		
+		int count = 0;
+		
+		endTimeStamp = stopTimeStamp();
+		ArrayList<Message> messages = messageList.getMessageList(startTimeStamp, endTimeStamp);
+		for (Message message : messages) { 
+
+			if(message.getBody().equals(gameID)){
+				
+				playerList.add(new Player(message.getFrom(), message.getBody()));
+				count++;
+				
+			}
+		 
+		}
+		
+		for(int i = 0; i < playerList.size(); i++){
+		
+			System.out.println(playerList.get(i));
+			
+		}
+		
+		return count;
+	
+	}
+	
+
 	public String gameInitialization(){
 		
+		startTimeStamp = startTimeStamp();
 		Random rand = new Random();
-		setTimeStamp();
 		return String.valueOf(rand.nextInt((9999 - 1001) + 1) + 1001);
 		
 	}
 	
-	public String setTimeStamp(){
+	public Date startTimeStamp(){
 		
-		SimpleDateFormat date = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-		Date today = new Date();
-		currentDateStamp = date.format(today);
+		Date startTimeStamps = new Date();
 		
-		return currentDateStamp;
+		return startTimeStamps;
+		
+	}
+	
+	public Date stopTimeStamp(){
+		
+		Date endTimeStamps = new Date();
+		
+		return endTimeStamps;
 		
 	}
 
