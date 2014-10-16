@@ -1,7 +1,6 @@
 package Stannix;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.Notifications;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.DialogAction;
 import org.controlsfx.dialog.Dialogs;
 
 import com.twilio.sdk.resource.instance.Message;
@@ -27,41 +30,31 @@ public class StannixUIController {
 	Stannix startGame, messageList;
 	
 	@SuppressWarnings("deprecation")
-	@FXML private void startGame(ActionEvent event){
+	@FXML private void startGame(ActionEvent event) throws InterruptedException{
 		
 		boolean bool = true;
+		int currentPlayerRegistrationCount = 0;
+		
 		startGame = new Stannix();
-		startGame.setTimeStamp();
+		
 		String gameID = startGame.gameInitialization();
+		Action nextButton = new DialogAction("Next", ButtonType.OTHER);
+		Action response = Dialogs.create().title("Waiting for players...")
+				.actions(nextButton)
+				.masthead("To join the curent game:")
+				.message( "Text: " + gameID + " to (703) 991-4800").showConfirm();
 		
-		Optional<String> response = Dialogs.create().title("Stannix").masthead("How many players are there?").showTextInput();
-			 
-		response.ifPresent(name -> System.out.println(name));
+		if(response == nextButton){
+
 			
-		Dialogs.create().lightweight().title("Waiting for players...").masthead("To join the curent game:").message( "Text: " + gameID + " to (703) 991-4800").showInformation();
-		
-//		while(bool){
-//			
-//			String startTime = startGame.gameInitialization();
-//			ArrayList<Message> players = startGame.getMessages();
-//			outputWindow.setText(startGame.printMessages(players));
-//			bool = false;
-//			
-//		}
-		
-		
+			Notifications.create()
+            	.title("Players have been initialized")
+            	.text("Currently " + startGame.createPlayers(gameID) + " players playing!")
+            	.showWarning();
+			
+		}
 		
 	}
-	
-@FXML private void start(ActionEvent event){
-		
-		setPhoneNumberText(phoneNumber.getText());
-		setMessageContentsText(messageContents.getText()); 
-		
-		startGame = new Stannix(getPhoneNumberText(), getMessageContentsText());
-		
-	}
-	
 	
 	@FXML private void getMess(ActionEvent event){
 		
